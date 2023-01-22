@@ -65,7 +65,7 @@ async function main() {
     const t = new ToDo;
     
     console.log(`\n       WELCOME!!\n`);
-    console.log(`This is a todo list application used to view all your tasks for the day, add your daily tasks, update your tasks and mark or clear any completed tasks.\n`)
+    console.log(`This is a todo list application used to view all your tasks for the day, add your daily tasks, update your tasks, delete any task and mark or clear any completed tasks.\n`)
 
     await new Promise(resolve => 
         setTimeout(() => {
