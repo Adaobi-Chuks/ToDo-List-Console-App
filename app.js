@@ -1,119 +1,164 @@
-//An object that stores both completed and incomplete tasks
-const toDoList = {
-    ToDo: ["Wake up", "Pray", "Bath"],
-    Done: []
-}
+const prompt = require("prompt-sync")();
+class ToDo {
 
-//Function used to add an item to the task list
-function add (list, item) {
-    list.push(item);
-}
+    #toDoList;
 
-//Function used to edit a task
-function update (list, index, item) {
-    list[index - 1] = item;
-}
-
-//Function used to delete a task
-function remove (list, index) {
-    list.splice(index - 1, 1);
-}
-
-//Function used to delete an item from one array and add the same item to another array
-function markDone (list1, index, list2) {
-    const itemDone = list1.splice(index - 1, 1);
-    add(list2, itemDone);
-}
-
-//Function used to delete all the items from one array and add them to another array
-function clear (list1, list2) {
-    for (let i = 0; i = list1.length; i++) {
-        markDone(list1, 1, list2);
+    //Constructor function
+    constructor() {
+        this.#toDoList = {
+            Undone: ["Wake up", "Pray", "Bath"],
+            Done: []
+        }
     }
-}
 
-//Function that groups the incomplete an completed tasks and displays it to the user
-function read (list1, list2) {
-    console.log(`You have ${list1.length} tasks to be completed AND ${list2.length} completed tasks for today!!!`);
-    //Only displaying the title when the array isn't empty
-    (list1.length === 0) ? null : console.log(`\nTODAY'S TODO:`);
-    list1.forEach((item, index) => {console.log(`🔳 ${index + 1}->${item}`)});
-    //Only displaying the title when the array isn't empty
-    (list2.length === 0) ? null : console.log(`\nCOMPLETED TASK:`);
-    list2.forEach((item, index) => {console.log(`✅ ${index + 1}->${item}`)});
+    get undone() {
+        return this.#toDoList.Undone;
+    }
+
+    get done() {
+        return this.#toDoList.Done;
+    }
+    
+    //Method that adds a task to the toDoList
+    add (task) {
+        this.undone.push(task);
+    }
+
+    //Method that edits a task at a specific index
+    update (index, task) {
+        this.undone[index - 1] = task;
+    }
+
+    //Method that deletes a task at a specific index
+    remove (index) {
+        return this.undone.splice(index - 1, 1);
+    }
+
+    //Method that deletes a task from Undone and adds the same task to Done
+    markDone (index) {
+        const task = this.remove(index);
+        this.done.push(task);
+    }
+    
+    //Method that deletes all the items from Undone and adds them to Done
+    clear () {
+        for (let i = 0; i = this.undone.length; i++) {
+            this.markDone(1);
+        }
+    }
+    
+    //Method that displays the Undone and Done task to the user in a neat format
+    read () {
+        console.log(`You have ${this.undone.length} tasks to be completed AND ${this.done.length} completed tasks for today!!!`);
+        //Only displaying the title when the array isn't empty
+        (this.undone.length === 0) ? null : console.log(`\nTODAY'S TODO:`);
+        this.undone.forEach((task, index) => {console.log(`🔳 ${index + 1}->${task}`)});
+        //Only displaying the title when the array isn't empty
+        (this.done.length === 0) ? null : console.log(`\nCOMPLETED TASK:`);
+        this.done.forEach((task, index) => {console.log(`✅ ${index + 1}->${task}`)});
+    }
+
 }
 
 //Main Function
 async function main() {
+
+    const t = new ToDo;
+    
     console.log(`\n       WELCOME!!\n`);
     console.log(`This is a todo list application used to view all your tasks for the day, add your daily tasks, update your tasks and mark or clear any completed tasks.\n`)
 
     await new Promise(resolve => 
         setTimeout(() => {
-            read(toDoList.ToDo, toDoList.Done);
-            resolve();
+            resolve(t.read());
     }, 5000));
 
     while(true) {
         await new Promise(resolve => 
             setTimeout(() => {
                 console.log("\nAVAILABLE OPTIONS!!!");
-                console.log(`1.) View todo List\n2.) Add a todo task\n3.) Update a todo task\n4.) Mark a todo task as done\n5.) Clear incomplete task\n6.) Exit\n`);
+                console.log(`1.) View todo List\n2.) Add a todo task\n3.) Update a todo task\n4.) Delete a todo task\n5.) Mark a todo task as done\n6.) Clear incomplete task\n7.) Exit\n`);
                 resolve();
-        }, 5000));
+        }, 4000));
         
         const choice = prompt(`Input a number from above to perform a task: `);
         console.log("");
 
         switch(choice) {
             case "1":
-                read(toDoList.ToDo, toDoList.Done);
+                t.read();
                 break;
             case "2":
                 const reply = prompt("Input a task to add to the list: ");
                 //Using a higher order function to ensure a task can only be added once
-                const filter = toDoList.ToDo.filter((task) => task.toLowerCase() === reply.toLowerCase());
+                const filter = t.undone.filter((task) => task.toLowerCase() === reply.toLowerCase());
                 if (filter.length === 0){
-                    add(toDoList.ToDo, reply);
+                    t.add(reply);
                     console.log();
-                    read(toDoList.ToDo, toDoList.Done);
+                    t.read();
                 } else {
-                    console.log(`"${reply}" has already been added!!!`);
+                    console.log(`\n"${reply}" has already been added!!!`);
                 }
                 break;
             case "3":
                 const index = prompt("Input the index of the task you wish to update: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                if((index > toDoList.ToDo.length) || (index <= 0)) {
-                    console.log("\nTask doesn't exist")
+                if((index > t.undone.length) || (index <= 0)) {
+                    console.log("\nTask doesn't exist");
+                } else if (isNaN(index)) {
+                    console.log(`\n${index} is not a number!`);
                 } else {
                     const newTask = prompt("Input your new task: ");
-                    update(toDoList.ToDo, index, newTask);
+                    t.update(index, newTask);
                     console.log();
-                    read(toDoList.ToDo, toDoList.Done);
+                    t.read();
                 }
                 break;
             case "4":
-                const i = prompt("Input the index of the task you wish to mark as done: ");
-                //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                if((i > toDoList.ToDo.length) || (i <= 0)) {
-                    console.log("\nTask doesn't exist")
-                } else {
-                    markDone(toDoList.ToDo, i, toDoList.Done);
-                    console.log();
-                read(toDoList.ToDo, toDoList.Done);
-            }
-            break;
+                const rep = prompt("Are you sure?y/n ");
+                if((rep.toLowerCase() === "yes") || (rep.toLowerCase() === "y")) {
+                    const i = prompt("Input the index of the task you wish to delete: ");
+                    if((i > t.undone.length) || (i <= 0)) {
+                        console.log("\nTask doesn't exist")
+                    } else if (isNaN(i)) {
+                        console.log(`\n${i} is not a number!`);
+                    } else {
+                        t.remove(i);
+                        console.log();
+                        t.read();
+                    }
+                }
+                break;
             case "5":
-                const answer = prompt("Are you sure?y/n ");
-                if((answer.toLowerCase() === "yes") || (answer.toLowerCase() === "y")) {
-                    clear(toDoList.ToDo, toDoList.Done);
+                const i = prompt("\nInput the index of the task you wish to mark as done: ");
+                //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
+                if((i > t.undone.length) || (i <= 0)) {
+                    console.log("\nTask doesn't exist")
+                } else if (isNaN(i)) {
+                    console.log(`\n${i} is not a number!`);
+                } else {
+                    t.markDone(i);
                     console.log();
-                    read(toDoList.ToDo, toDoList.Done);
+                    t.read();
                 }
                 break;
             case "6":
-                return;
+                const answer = prompt("Are you sure?y/n ");
+                if((answer.toLowerCase() === "yes") || (answer.toLowerCase() === "y")) {
+                    t.clear();
+                    console.log();
+                    t.read();
+                }
+                break;
+            case "7":
+                if(t.undone.length > 0) {
+                    const ans = prompt(`You still have some unfinished tasks. Are you sure you want to exit? y/n `);
+                    if((ans.toLowerCase() === "yes") || (ans.toLowerCase() === "y")) {
+                        return;
+                    }
+                }
+                t.read();
+                break;
             default:
                 continue;
         }
