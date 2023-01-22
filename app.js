@@ -1,5 +1,5 @@
 //An object that stores both completed and incomplete tasks
-let toDoList = {
+const toDoList = {
     ToDo: ["Wake up", "Pray", "Bath"],
     Done: []
 }
