@@ -70,7 +70,7 @@ function checkIndex (index, callback) {
     }
 }
 
-//Main Function
+//Main Function: Runs the application
 async function main() {
 
     const t = new ToDo;
