@@ -114,6 +114,7 @@ async function main() {
                 const index = prompt("Input the index of the task you wish to update: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
                 checkIndex(t.undone, index, (() => {
+                    console.log();
                     const newTask = prompt("Input your new task: ");
                     t.update(index, newTask);
                     console.log();
@@ -121,12 +122,12 @@ async function main() {
                 }))
                 break;
             case "4":
+                const id = prompt("Input the index of the task you wish to delete: ");
                 const rep = prompt("Are you sure?y/n ");
                 if((rep.toLowerCase() === "yes") || (rep.toLowerCase() === "y")) {
-                    const i = prompt("Input the index of the task you wish to delete: ");
                     //Ensures that the user inputs only the index that has a task assigned
-                    checkIndex(t.undone, index, (() => {
-                        t.remove(i);
+                    checkIndex(t.undone, id, (() => {
+                        t.remove(id);
                         console.log();
                         t.read();
                     }));
@@ -135,7 +136,7 @@ async function main() {
             case "5":
                 const i = prompt("\nInput the index of the task you wish to mark as done: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                checkIndex(t.undone, index, (() => {
+                checkIndex(t.undone, i, (() => {
                     t.markDone(i);
                     console.log();
                     t.read();
