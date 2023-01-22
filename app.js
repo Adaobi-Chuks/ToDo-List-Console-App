@@ -1,3 +1,4 @@
+const prompt = require("prompt-sync")();
 //An object that stores both completed and incomplete tasks
 let toDoList = {
     ToDo: ["Wake up", "Pray", "Bath"],
@@ -49,68 +50,70 @@ async function main() {
             resolve();
     }, 5000));
 
-    setTimeout(() => {
+    while(true) {
+        await new Promise(resolve => 
+            setTimeout(() => {
+                console.log("\nAVAILABLE OPTIONS!!!");
+                console.log(`1.) View todo List\n2.) Add a todo task\n3.) Update a todo task\n4.) Mark a todo task as done\n5.) Clear incomplete task\n6.) Exit\n`);
+                resolve();
+        }, 5000));
+        
+        const choice = prompt(`Input a number from above to perform a task: `);
+        console.log("");
 
-        while(true) {
-            console.log("\nAVAILABLE OPTIONS!!!");
-            console.log(`1.) View todo List\n2.) Add a todo task\n3.) Update a todo task\n4.) Mark a todo task as done\n5.) Clear incomplete task\n6.) Exit\n`);
-            const choice = prompt(`Input a number from above to perform a task: `);
-            console.log("");
-
-            switch(choice) {
-                case "1":
+        switch(choice) {
+            case "1":
+                read(toDoList.ToDo, toDoList.Done);
+                break;
+            case "2":
+                const reply = prompt("Input a task to add to the list: ");
+                //Using a higher order function to ensure a task can only be added once
+                const filter = toDoList.ToDo.filter((task) => task.toLowerCase() === reply.toLowerCase());
+                if (filter.length === 0){
+                    add(toDoList.ToDo, reply);
+                    console.log();
                     read(toDoList.ToDo, toDoList.Done);
-                    break;
-                case "2":
-                    const reply = prompt("Input a task to add to the list: ");
-                    //Using a higher order function to ensure a task can only be added once
-                    const filter = toDoList.ToDo.filter((task) => task.toLowerCase() === reply.toLowerCase());
-                    if (filter.length === 0){
-                        add(toDoList.ToDo, reply);
-                        console.log();
-                        read(toDoList.ToDo, toDoList.Done);
-                    } else {
-                        console.log(`"${reply}" has already been added!!!`);
-                    }
-                    break;
-                case "3":
-                    const index = prompt("Input the index of the task you wish to update: ");
-                    //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                    if((index > toDoList.ToDo.length) || (index <= 0)) {
-                        console.log("\nTask doesn't exist")
-                    } else {
-                        const newTask = prompt("Input your new task: ");
-                        update(toDoList.ToDo, index, newTask);
-                        console.log();
-                        read(toDoList.ToDo, toDoList.Done);
-                    }
-                    break;
-                case "4":
-                    const i = prompt("Input the index of the task you wish to mark as done: ");
-                    //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                    if((i > toDoList.ToDo.length) || (i <= 0)) {
-                        console.log("\nTask doesn't exist")
-                    } else {
-                        markDone(toDoList.ToDo, i, toDoList.Done);
-                        console.log();
+                } else {
+                    console.log(`"${reply}" has already been added!!!`);
+                }
+                break;
+            case "3":
+                const index = prompt("Input the index of the task you wish to update: ");
+                //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
+                if((index > toDoList.ToDo.length) || (index <= 0)) {
+                    console.log("\nTask doesn't exist")
+                } else {
+                    const newTask = prompt("Input your new task: ");
+                    update(toDoList.ToDo, index, newTask);
+                    console.log();
                     read(toDoList.ToDo, toDoList.Done);
                 }
                 break;
-                case "5":
-                    const answer = prompt("Are you sure?y/n ");
-                    if((answer.toLowerCase() === "yes") || (answer.toLowerCase() === "y")) {
-                        clear(toDoList.ToDo, toDoList.Done);
-                        console.log();
-                        read(toDoList.ToDo, toDoList.Done);
-                    }
-                    break;
-                case "6":
-                    return;
-                default:
-                    continue;
+            case "4":
+                const i = prompt("Input the index of the task you wish to mark as done: ");
+                //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
+                if((i > toDoList.ToDo.length) || (i <= 0)) {
+                    console.log("\nTask doesn't exist")
+                } else {
+                    markDone(toDoList.ToDo, i, toDoList.Done);
+                    console.log();
+                read(toDoList.ToDo, toDoList.Done);
             }
+            break;
+            case "5":
+                const answer = prompt("Are you sure?y/n ");
+                if((answer.toLowerCase() === "yes") || (answer.toLowerCase() === "y")) {
+                    clear(toDoList.ToDo, toDoList.Done);
+                    console.log();
+                    read(toDoList.ToDo, toDoList.Done);
+                }
+                break;
+            case "6":
+                return;
+            default:
+                continue;
         }
-    }, 5000);
+    }
 }
 
 main();
