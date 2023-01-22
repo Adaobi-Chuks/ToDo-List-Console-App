@@ -60,8 +60,8 @@ class ToDo {
 }
 
 //To avoid repitition of code, a function that checks if an index is valid. It expects a callback function.
-function checkIndex (index, callback) {
-    if((index > t.undone.length) || (index <= 0)) {
+function checkIndex (list, index, callback) {
+    if((index > list.length) || (index <= 0)) {
         console.log("\nTask doesn't exist");
     } else if (isNaN(index)) {
         console.log(`\n${index} is not a number!`);
@@ -113,7 +113,7 @@ async function main() {
             case "3":
                 const index = prompt("Input the index of the task you wish to update: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                checkIndex(index, (() => {
+                checkIndex(t.undone, index, (() => {
                     const newTask = prompt("Input your new task: ");
                     t.update(index, newTask);
                     console.log();
@@ -125,7 +125,7 @@ async function main() {
                 if((rep.toLowerCase() === "yes") || (rep.toLowerCase() === "y")) {
                     const i = prompt("Input the index of the task you wish to delete: ");
                     //Ensures that the user inputs only the index that has a task assigned
-                    checkIndex(index, (() => {
+                    checkIndex(t.undone, index, (() => {
                         t.remove(i);
                         console.log();
                         t.read();
@@ -135,7 +135,7 @@ async function main() {
             case "5":
                 const i = prompt("\nInput the index of the task you wish to mark as done: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
-                checkIndex(index, (() => {
+                checkIndex(t.undone, index, (() => {
                     t.markDone(i);
                     console.log();
                     t.read();
