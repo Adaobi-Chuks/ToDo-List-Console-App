@@ -123,6 +123,7 @@ async function main() {
                 break;
             case "4":
                 const id = prompt("Input the index of the task you wish to delete: ");
+                console.log();
                 const rep = prompt("Are you sure?y/n ");
                 if((rep.toLowerCase() === "yes") || (rep.toLowerCase() === "y")) {
                     //Ensures that the user inputs only the index that has a task assigned
