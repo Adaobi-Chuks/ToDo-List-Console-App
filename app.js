@@ -1,4 +1,3 @@
-const prompt = require("prompt-sync")();
 //An object that stores both completed and incomplete tasks
 let toDoList = {
     ToDo: ["Wake up", "Pray", "Bath"],
