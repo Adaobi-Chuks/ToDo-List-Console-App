@@ -154,10 +154,13 @@ async function main() {
                     const ans = prompt(`You still have some unfinished tasks. Are you sure you want to exit? y/n `);
                     if((ans.toLowerCase() === "yes") || (ans.toLowerCase() === "y")) {
                         return;
+                    } else {
+                        t.read();
+                        break;
                     }
                 }
-                t.read();
-                break;
+                console.log("Congrats on completing your tasks.");
+                return;
             default:
                 continue;
         }
