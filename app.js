@@ -4,14 +4,19 @@ const toDoList = {
     Done: []
 }
 
-//Function used to add an item to an array
+//Function used to add an item to the task list
 function add (list, item) {
     list.push(item);
 }
 
-//Function used to edit a task in an array
+//Function used to edit a task
 function update (list, index, item) {
     list[index - 1] = item;
+}
+
+//Function used to delete a task
+function remove (list, index) {
+    list.splice(index - 1, 1);
 }
 
 //Function used to delete an item from one array and add the same item to another array
