@@ -135,7 +135,7 @@ async function main() {
                 }
                 break;
             case "5":
-                const i = prompt("\nInput the index of the task you wish to mark as done: ");
+                const i = prompt("Input the index of the task you wish to mark as done: ");
                 //Ensures that the user inputs only the index that has a task assigned to avoid creating empty objects
                 checkIndex(t.undone, i, (() => {
                     t.markDone(i);
